@@ -1,10 +1,13 @@
 const nodemailer = require('nodemailer');
-const emailConfig = require('../config/config').email.development;
+const config = require('../config/config.js');
+const enviornment = config.environment[config.environment.active];
+const emailConfig = require('../config/config').email[config.environment.active];
+
 
 const transporter = nodemailer.createTransport({
-  // service: emailConfig.service, // Specify the service for Gmail as SMTP Server
-  host: '127.0.0.1',
-  port: 25,
+  service: emailConfig.service, // Specify the service for Gmail as SMTP Server
+  host: enviornment.host,
+  port: enviornment.port,
   secure: false,
   auth: {
     user: emailConfig.user,
@@ -15,14 +18,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailOptions = {
-  from: 'cineakers@gmail.com', // Sender address
-  to: ["kanishkahuja.2874@gmail.com"],
-  subject: 'Cineakers🎥🎬: Your Ultimate Movie Booking Platform! ', // Subject line
-  html: 'Testing Email....',
-};
-
-const sendEmailThroughGmail = transporter.sendMail(
+const sendEmailThroughGmail = (mailOptions) => transporter.sendMail(
   mailOptions,
   (error, info) => {
     if (error) {
@@ -32,9 +28,9 @@ const sendEmailThroughGmail = transporter.sendMail(
   },
 );
 
-async () => {
-  sendEmailThroughGmail();
-};
+// async () => {
+//   sendEmailThroughGmail();
+// };
 module.exports = {
   sendEmailThroughGmail,
 };
