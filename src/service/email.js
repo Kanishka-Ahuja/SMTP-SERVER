@@ -18,15 +18,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmailThroughGmail = (mailOptions) => transporter.sendMail(
-  mailOptions,
-  (error, info) => {
-    if (error) {
-      return console.log(error);
-    }
-    console.log('Message sent: %s', info.response);
-  },
-);
+
+const sendEmailThroughGmail = async (mailOptions) => {
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    throw new Error(error.message); 
+  }
+};
 
 // async () => {
 //   sendEmailThroughGmail();
